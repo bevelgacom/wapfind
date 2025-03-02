@@ -118,7 +118,8 @@ try {
     $readable_article = strip_tags($readability->getContent(), '<a><li><br><p><small><b><strong><i><em>');
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
-    $readable_article = preg_replace( '/<li.*>/', '<br/> *', $readable_article ); //change <li> to '* '
+    $readable_article = preg_replace( '/<li>/', '<br/> *', $readable_article ); //change <li> to '* '
+    $readable_article = preg_replace( '/<li.*">/', '<br/> *', $readable_article ); //change <li> to '* '
     $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
     $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
