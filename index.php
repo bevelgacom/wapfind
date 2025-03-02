@@ -91,7 +91,7 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $result_topline = explode("\" class='result-link'>", $result_link);
         // remove http from the start of the  link
         $result_link = substr($result_topline[0], 4);
-        $result_link = '/read.php?a=' . urlencode($result_link);
+        $result_link = '/r?a=' . urlencode($result_link);
         // result title
         $result_title = str_replace("</a>","",explode("\n", $result_topline[1]));
         // result display url stripped of protocol and path

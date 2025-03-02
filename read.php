@@ -124,7 +124,7 @@ function replace_links($html) {
             if (substr($encodedUrl, 0, 4) == "http") {
                 $encodedUrl = substr($encodedUrl, 4);
             }
-            return '<a href="/read.php?a=' . $encodedUrl . '"';
+            return '<a href="/r?a=' . $encodedUrl . '"';
         },
         $html
     );
@@ -150,7 +150,7 @@ try {
     $readable_article = preg_replace('/title="[^"]+"/', '', $readable_article);
     
     $readable_article = clean_str($readable_article);
-    //$readable_article = str_replace( 'href="http', 'href="/read.php?a=', $readable_article ); //route links through proxy
+    //$readable_article = str_replace( 'href="http', 'href="/r?a=', $readable_article ); //route links through proxy
 
     //route links through proxy and urlencode the full url
     $readable_article = replace_links($readable_article);
@@ -224,7 +224,7 @@ header('content-type: text/vnd.wap.wml');
     <p><?php echo $readable_article;?></p>
 
 <?php if($show_more_button) { ?>
-    <p align="center"><a href="/read.php?a=<?php echo urlencode($_GET['a']); ?>&amp;o=<?php echo $offset ?>">&gt; More</a></p>
+    <p align="center"><a href="/r?a=<?php echo urlencode($_GET['a']); ?>&amp;o=<?php echo $offset ?>">&gt; More</a></p>
 <?php } ?>
 <do type="prev" label="Back">
 <prev/>
