@@ -8,6 +8,15 @@ $final_result_html = "<img src=\"/line.wbmp\" alt=\"------\"/>";
 $query = "";
 $show_more_button = false;
 
+$snippetLength = 150;
+$titleLength = 35;
+
+// if user agent contains Nokia 7110 or Nokia 3110 restrict text more
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'Nokia7110') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Nokia3110') !== false) {
+    $snippetLength = 90;
+    $titleLength = 20;
+}
+
 if(isset( $_GET['q'])) { // if there's a search query, show the results for it
     $query = urlencode($_GET["q"]);
     $show_results = TRUE;
@@ -65,10 +74,6 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $show_more_button = true;
     }
 
-    // show 5 results at a time
-    if ($total_results > 5) {
-        $total_results = 5;
-    }
 
     for ($x = $offset+1; $x <= $total_results+$offset; $x++) {
         // result link, redirected through our proxy
@@ -87,12 +92,12 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $result_snippet = explode("class='result-snippet'>", $result_blocks[$x])[1];
         $result_snippet = explode('</td>', $result_snippet)[0];
 
-        if (strlen($result_snippet) > 150) {
-            $result_snippet = substr($result_snippet, 0, 150) . "...";
+        if (strlen($result_snippet) > $snippetLength) {
+            $result_snippet = substr($result_snippet, 0, $snippetLength) . "...";
         }
 
-        if (strlen($result_title[0]) > 35) {
-            $result_title[0] = substr($result_title[0], 0, 35) . "...";
+        if (strlen($result_title[0]) > $titleLength) {
+            $result_title[0] = substr($result_title[0], 0, $titleLength) . "...";
         }
 
         $final_result_html .= "<br/>\n<a href='" . $result_link . "'>" . $result_title[0] . "<br/>\n" 
