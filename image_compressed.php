@@ -84,7 +84,9 @@ echo $bmpData;
 // Cleanup
 $im1->clear();
 $im1->destroy();
-$palette->clear();
-$palette->destroy();
+if (!$supports_jpeg) {
+    $palette->clear();
+    $palette->destroy();
+}
 
 ?>
