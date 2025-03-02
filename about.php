@@ -1,4 +1,10 @@
 <?php
+    $logo = "logo.wbmp";
+    // if the Accept header contains png, use the png logo
+    if (strpos($_SERVER['HTTP_ACCEPT'], 'image/png') !== false) {
+        $logo = "logo.png";
+    }
+
     // set content type
     header('Content-Type: text/vnd.wap.wml');
 ?>
@@ -8,7 +14,7 @@
 <wml>
 <card id="card1" title="About W@PFind!">
 <p align="center">
-<img src="/logo.wbmp" alt="W@PFind!"/>
+<img src="/<?php echo $logo ?>" alt="W@PFind!"/>
 </p>
 <p>
 What in the world is W@PFind?

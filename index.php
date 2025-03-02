@@ -3,6 +3,12 @@ require_once('vendor/autoload.php');
 require_once('text.php');
 header('Content-Type: text/vnd.wap.wml');
 
+$logo = "logo.wbmp";
+// if the Accept header contains png, use the png logo
+if (strpos($_SERVER['HTTP_ACCEPT'], 'image/png') !== false) {
+    $logo = "logo.png";
+}
+
 $show_results = FALSE;
 $results_html = "";
 $final_result_html = "<img src=\"/line.wbmp\" alt=\"------\"/>";
@@ -133,7 +139,7 @@ function clean_str($str) {
 <wml>
 <card id="card1" title="W@PFind!">
 <p>
-<img src="/logo.wbmp" alt="W@PFind!"/>
+<img src="/<?php echo $logo ?>" alt="W@PFind!"/>
 </p>
 
 <p>
