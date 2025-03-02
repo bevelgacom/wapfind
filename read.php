@@ -163,21 +163,50 @@ try {
 
 
     $readable_article .= "<br/>";
+
+    $readable_article_parts = explode('<br/>', $readable_article);
+    $readable_article = "";
+    
+    foreach ($readable_article_parts as $part) {
+        global $offset;
+        global $readable_article;
+        $part = trim($part);
+        if (strlen($readable_article.$part) < 700+$offset) {
+            $readable_article .= "<br/>" . $part;
+        } else {
+            // add one more part to the end of the article
+            $readable_article .= "<br/>" . $part;
+
+            $show_more_button = true;
+            $offset = strlen($readable_article);
+            break;
+        }
+    }
+    
     // limit readable_article to 700 characters without breaking html tags
-    if (strlen($readable_article) > 700+$offset) {
-        $start = $offset;
-        // find closest closing tag to 700 characters
-        $tag = strpos($readable_article, '/>', 700+$offset);
-        $readable_article = substr($readable_article, $start, $tag+2);
+    if (strlen($readable_article) > 700+$initial_offset) {
+        $start = $initial_offset;
+       
+        $tag = false;
+        $offset = 0;
+        $c = 0;
+        while (!$tag) {
+            $tag = strpos($readable_article, '</', 700-$c+$initial_offset);
+            if ($tag === false) {
+                strpos($readable_article, '/>', 700-$c+$initial_offset);
+            }
+            $c++;
+        }
+
+        $readable_article = substr($readable_article, $initial_offset, $tag+2);
+
 
         $offset = $tag+2;
 
         $show_more_button = true;
-    } else if ($offset > 0) {
-        echo "END";
-        $readable_article = substr($readable_article, $offset);
-    }
-    
+    } else if ($initial_offset > 0) {
+        $readable_article = substr($readable_article, $initial_offset);
+    }    
     
 } catch (ParseException $e) {
     $error_text .= 'Sorry! ' . $e->getMessage() . '<br/>';
