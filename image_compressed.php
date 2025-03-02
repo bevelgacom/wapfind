@@ -32,7 +32,7 @@ if (!array_key_exists('content-type', $headers)) {
 $allowed_types = ["image/jpeg", "image/png"];
 
 if (!in_array($headers['content-type'], $allowed_types)) {
-    echo("Unsupported file type :(");
+    echo("Unsupported file type :( " . $headers['content-type']);
     exit();
 }
 
