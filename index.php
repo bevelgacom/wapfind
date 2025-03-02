@@ -11,11 +11,13 @@ $show_more_button = false;
 
 $snippetLength = 150;
 $titleLength = 35;
+$resultLength = 5;
 
 // if user agent contains Nokia 7110 or Nokia 3330 restrict text more
 if (strpos($_SERVER['HTTP_USER_AGENT'], '7110') !== false || strpos($_SERVER['HTTP_USER_AGENT'], '3330') !== false) {
     $snippetLength = 90;
     $titleLength = 20;
+    $resultLength = 3;
 }
 
 if(isset( $_GET['q'])) { // if there's a search query, show the results for it
@@ -71,8 +73,9 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $offset = $_GET['o'];
     }
     
-    if ($total_results > 5+$offset) {
+    if ($total_results > $resultLength+$offset) {
         $show_more_button = true;
+        $total_results = $resultLength;
     }
 
 
@@ -147,7 +150,7 @@ function clean_str($str) {
     <p align="center"><a href="about.php">Why build such a thing?</a></p>
 <?php } ?>
 <?php if($show_more_button) { ?>
-    <p align="center"><a href="/index.php?q=<?php echo $query ?>&amp;o=<?php echo $offset+5 ?>">More Results</a></p>
+    <p align="center"><a href="/index.php?q=<?php echo $query ?>&amp;o=<?php echo $offset+$resultLength ?>">More Results</a></p>
 <?php } ?>
 
 
