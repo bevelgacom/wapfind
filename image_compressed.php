@@ -3,9 +3,9 @@ $url = "";
 $filetype = "";
 $raw_image = NULL;
 
-$supports_png = false;
-if (strpos($_SERVER['HTTP_ACCEPT'], 'image/png') !== false) {
-    $supports_png = true;
+$supports_jpeg = false;
+if (strpos($_SERVER['HTTP_ACCEPT'], 'image/jpeg') !== false) {
+    $supports_jpeg = true;
 }
 
 //get the image url
@@ -59,7 +59,7 @@ try {
 // Resize the image to 100 pixels in width (height auto-adjusts)
 $im1->resizeImage(100, 0, Imagick::FILTER_LANCZOS, 1);
 
-if (!$supports_png) {
+if (!$supports_jpeg) {
     // get image width and height
     $width = $im1->getImageWidth();
 
@@ -72,8 +72,10 @@ if (!$supports_png) {
     $im1->setImageFormat('wbmp');
     header('Content-Type: image/vnd.wap.wbmp');
 } else {
-    $im1->setImageFormat('png');
-    header('Content-Type: image/png');
+    $im1->setImageCompression(Imagick::COMPRESSION_JPEG);
+    $im1->setImageCompressionQuality(20);
+    $im1->setImageFormat('jpeg');
+    header('Content-Type: image/jpeg');
 }
 $bmpData = $im1->getImageBlob();
 
