@@ -36,6 +36,7 @@ try {
     $im1->readImageBlob($raw_image);
 } catch (ImagickException $e) {
     echo("Failed to read image :(");
+    echo($url);
     echo($raw_image);
     exit();
 }
