@@ -25,7 +25,7 @@ $compatible_content_types = [
 $proxy_download_max_filesize = 8000000; // ~ 8Mb
 
 if( isset( $_GET['a'] ) ) {
-    $article_url = $_GET["a"];
+    $article_url = "http".$_GET["a"];
 } else {
     echo "What do you think you're doing... >:(";
     exit();
@@ -113,6 +113,22 @@ if(!$article_html = file_get_contents($article_url)) {
     $error_text .=  "Failed to get the article :( <br/>";
 }
 
+function replace_links($html) {
+    return preg_replace_callback(
+        '/<a\s+href=["\']([^"\']+)["\']/i',
+        function ($matches) {
+            $encodedUrl = urlencode($matches[1]);
+            // if encodedUrl starts with http remove the word http
+            if (substr($encodedUrl, 0, 4) == "http") {
+                $encodedUrl = substr($encodedUrl, 4);
+            }
+            return '<a href="/read.php?a=' . $encodedUrl . '"';
+        },
+        $html
+    );
+}
+
+
 try {
     $readability->parse($article_html);
     $readable_article = strip_tags($readability->getContent(), '<a><li><br><p><small><b><strong><i><em>');
@@ -129,7 +145,10 @@ try {
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
     
     $readable_article = clean_str($readable_article);
-    $readable_article = str_replace( 'href="http', 'href="/read.php?a=http', $readable_article ); //route links through proxy
+    //$readable_article = str_replace( 'href="http', 'href="/read.php?a=', $readable_article ); //route links through proxy
+
+    //route links through proxy and urlencode the full url
+    $readable_article = replace_links($readable_article);
 
     // remove empty a tags
     $readable_article = preg_replace('/<a[^>]*><\/a>/', '', $readable_article);
