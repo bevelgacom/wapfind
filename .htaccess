@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^r$ read.php [L]
