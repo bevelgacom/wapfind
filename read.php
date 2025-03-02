@@ -129,7 +129,6 @@ function replace_links($html) {
     );
 }
 
-
 try {
     $readability->parse($article_html);
     $readable_article = strip_tags($readability->getContent(), '<a><li><br/><p><small><b><strong><i><em>');
@@ -141,7 +140,7 @@ try {
     $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
-
+    
     // remove all cite_note links from wikipedia
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
 
@@ -156,6 +155,12 @@ try {
 
     // remove empty a tags
     $readable_article = preg_replace('/<a[^>]*><\/a>/', '', $readable_article);
+
+    // strip tags in link text (e.g. <a href="http://example.com">hello <b>example</b></a> -> <a href="http://example.com">hello example</a>)
+    $readable_article = preg_replace_callback('/<a [^>]*>(.*?)<\/a>/', function ($matches) {
+        return '<a' . substr($matches[0], 2, strpos($matches[0], '>') - 2) . '>' . strip_tags($matches[1]) . '</a>';
+    }, $readable_article);
+
 
     $readable_article .= "<br/>";
     // limit readable_article to 700 characters without breaking html tags
