@@ -38,7 +38,6 @@ if( isset( $_GET['a'] ) ) {
 }
 
 if (substr( $article_url, 0, 4 ) != "http") {
-    echo $article_url;
     echo("That's not a web page :(");
     die();
 }
@@ -115,7 +114,6 @@ $configuration
     ->setOriginalURL('http://' . $host);
 
 $readability = new Readability($configuration);
-echo $article_url;
 if(!$article_html = file_get_contents($article_url)) {
     $error_text .=  "Failed to get the article :( <br/>";
 }
