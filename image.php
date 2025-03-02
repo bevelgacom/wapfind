@@ -30,7 +30,7 @@
 <wml>
 <card id="card1" title="W@PFind! Image Viewer">
 <p align="center">
-<img src="/image_compressed.php?i=<?php echo $url; ?>" alt="image"/>
+<img src="/image_compressed.php?i=<?php echo urlencode($url); ?>" alt="image"/>
 </p>
 
 <do type="prev" label="Back">
