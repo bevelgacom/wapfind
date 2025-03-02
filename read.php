@@ -7,9 +7,11 @@ $error_text = "";
 
 $show_more_button = false;
 $offset = 0;
+$initial_offset = 0;
 
 if (isset($_GET['o']) && $_GET['o']  > 0) {
     $offset = $_GET['o'];
+    $initial_offset = $_GET['o'];
 }
 
 // List of content-types that we know we can (try to) parse. 
@@ -212,7 +214,7 @@ header('content-type: text/vnd.wap.wml');
                     $imgline_html .= " <a href='/image.php?i=" . urlencode($image_url) . "'>[$img_num]</a> ";
                 }
             endforeach;
-            if($img_num>0) {
+            if($img_num>0 && $initial_offset == 0) {
                 echo  $imgline_html ;
             }
         ?>
