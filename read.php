@@ -143,6 +143,9 @@ try {
 
     // remove all cite_note links from wikipedia
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
+
+    // strip title tags from <a> tags
+    $readable_article = preg_replace('/title="[^"]+"/', '', $readable_article);
     
     $readable_article = clean_str($readable_article);
     //$readable_article = str_replace( 'href="http', 'href="/read.php?a=', $readable_article ); //route links through proxy
