@@ -129,16 +129,16 @@ function clean_str($str) {
 <?php if($show_results) { ?>
     <p align="center">Search Results for <b><?php echo strip_tags(urldecode($query)) ?></b></p>
     <p><?php echo $final_result_html ?></p>
-<?php } ?>
+<?php } else { ?>
+    <p><br/><br/><br/><br/></p>
 
+    <p align="center"><small>Powered by DuckDuckGo</small></p>
+    <p align="center"><a href="about.php">Why build such a thing?</a></p>
+<?php } ?>
 <?php if($show_more_button) { ?>
     <p align="center"><a href="/index.php?q=<?php echo $query ?>&amp;o=<?php echo $offset+5 ?>">More Results</a></p>
 <?php } ?>
 
-<p><br/><br/><br/><br/></p>
-
-<p align="center"><small>Powered by DuckDuckGo</small></p>
-<p align="center"><a href="about.php">Why build such a thing?</a></p>
 
 <do type="accept" label="&gt; Wappit!">
 <go href="/?q=$(q)"/>
