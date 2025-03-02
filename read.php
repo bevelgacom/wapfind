@@ -192,10 +192,19 @@ try {
         $c = 0;
         while (!$tag) {
             $tag = strpos($readable_article, '</', 700-$c+$initial_offset);
-            $offset = $tag;
+            if ($tag !== false) {
+                $tag = strpos($readable_article, '>', $tag);
+                if ($tag !== false) {
+                    $offset = $tag+1;
+                    break;
+                }
+            }
             if ($tag === false) {
                 $tag = strpos($readable_article, '/>', 700-$c+$initial_offset);
-                $offset = $tag+2;
+                if ($tag !== false) {
+                    $offset = $tag+2;
+                    break;
+                }
             }
             $c++;
         }
