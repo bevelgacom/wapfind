@@ -119,7 +119,7 @@ try {
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
     $readable_article = preg_replace( '/<li>/', '<br/> *', $readable_article ); //change <li> to '* '
-    $readable_article = preg_replace( '/<li.*">/', '<br/> *', $readable_article ); //change <li> to '* '
+    $readable_article = preg_replace( '/<li.*".>/', '<br/> *', $readable_article ); //change <li> to '* '
     $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
     $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
@@ -181,7 +181,7 @@ header('content-type: text/vnd.wap.wml');
                 //we can only do png and jpg
                 if (strpos($image_url, ".jpg") || strpos($image_url, ".jpeg") || strpos($image_url, ".png") === true) {
                     $img_num++;
-                    $imgline_html .= " <a href='/image.php?i=" . $image_url . "'>[$img_num]</a> ";
+                    $imgline_html .= " <a href='/image.php?i=" . urlencode($image_url) . "'>[$img_num]</a> ";
                 }
             endforeach;
             if($img_num>0) {
