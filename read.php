@@ -110,7 +110,7 @@ $configuration
 $readability = new Readability($configuration);
 
 if(!$article_html = file_get_contents($article_url)) {
-    $error_text .=  "Failed to get the article :( <br>";
+    $error_text .=  "Failed to get the article :( <br/>";
 }
 
 try {
