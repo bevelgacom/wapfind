@@ -131,6 +131,9 @@ try {
     $readable_article = clean_str($readable_article);
     $readable_article = str_replace( 'href="http', 'href="/read.php?a=http', $readable_article ); //route links through proxy
 
+    // remove empty a tags
+    $readable_article = preg_replace('/<a[^>]*><\/a>/', '', $readable_article);
+
     $readable_article .= "<br/>";
     // limit readable_article to 700 characters without breaking html tags
     if (strlen($readable_article) > 700+$offset) {
