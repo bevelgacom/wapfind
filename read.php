@@ -10,6 +10,14 @@ $show_more_button = false;
 $offset = 0;
 $initial_offset = 0;
 
+function tokenizeArticle($article) {
+    // Use a regex pattern to match entire HTML tags along with their contents or plain text separately
+    preg_match_all('/<[^>]+>[^<]*<\/[^>]+>|<[^>]+>|[^<>]+/', $article, $matches);
+    
+    // Return the matched tokens as an array
+    return $matches[0];
+}
+
 if (isset($_GET['o']) && $_GET['o']  > 0) {
     $offset = $_GET['o'];
     $initial_offset = $_GET['o'];
@@ -135,17 +143,19 @@ try {
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
     $readable_article = preg_replace( '/<li>/', '<br/> *', $readable_article ); //change <li> to '* '
-    $readable_article = preg_replace( '/<li.*".>/', '<br/> *', $readable_article ); //change <li> to '* '
+    $readable_article = preg_replace( '/<li[^>]*>/', '<br/> *', $readable_article ); //change <li> to '* '
     $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
     $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
-    
+
     // remove all cite_note links from wikipedia
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
 
     // strip title tags from <a> tags
     $readable_article = preg_replace('/title="[^"]+"/', '', $readable_article);
+    $readable_article = preg_replace('/rel="[^"]+"/', '', $readable_article);
+
     
     $readable_article = clean_str($readable_article);
     //$readable_article = str_replace( 'href="http', 'href="/r?a=', $readable_article ); //route links through proxy
@@ -164,60 +174,36 @@ try {
 
     $readable_article .= "<br/>";
 
-    $readable_article_parts = explode('<br/>', $readable_article);
+    $readable_article = substr($readable_article, $initial_offset);
+
+    $readable_article_original = $readable_article;
+
+    $tokens = tokenizeArticle($readable_article);
+
     $readable_article = "";
     
-    foreach ($readable_article_parts as $part) {
-        global $offset;
-        global $readable_article;
-        $part = trim($part);
-        if (strlen($readable_article.$part) < 700+$offset) {
-            $readable_article .= "<br/>" . $part;
-        } else {
-            // add one more part to the end of the article
-            $readable_article .= "<br/>" . $part;
-
-            $show_more_button = true;
-            $offset = strlen($readable_article);
+    foreach ($tokens as $token) {
+        if (strlen($readable_article.$token) > 700) {
+            // if the token does not contain any html tags, we can add word by word
+            if (strpos($token, '<') === false) {
+                $words = explode(' ', $token);
+                
+                foreach ($words as $word) {
+                    if (strlen($readable_article.$word) > 700) {
+                        break;
+                    }
+                    $readable_article .= " ". $word;
+                }
+            }
             break;
         }
+        $readable_article .= $token;
     }
-    
-    // limit readable_article to 700 characters without breaking html tags
-    if (strlen($readable_article) > 700+$initial_offset) {
-        $start = $initial_offset;
-       
-        $tag = false;
-        $offset = 0;
-        $c = 0;
-        while (!$tag) {
-            $tag = strpos($readable_article, '</', 700-$c+$initial_offset);
-            if ($tag !== false) {
-                $tag = strpos($readable_article, '>', $tag);
-                if ($tag !== false) {
-                    $offset = $tag+1;
-                    break;
-                }
-            }
-            if ($tag === false) {
-                $tag = strpos($readable_article, '/>', 700-$c+$initial_offset);
-                if ($tag !== false) {
-                    $offset = $tag+2;
-                    break;
-                }
-            }
-            $c++;
-        }
 
-        $readable_article = substr($readable_article, $initial_offset, $offset);
-
-
-        
-
+    if (strlen($readable_article) < strlen($readable_article_original)) {
         $show_more_button = true;
-    } else if ($initial_offset > 0) {
-        $readable_article = substr($readable_article, $initial_offset);
-    }    
+        $offset = strlen($readable_article) + $initial_offset;
+    }
     
 } catch (ParseException $e) {
     $error_text .= 'Sorry! ' . $e->getMessage() . '<br/>';
