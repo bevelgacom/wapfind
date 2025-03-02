@@ -192,16 +192,18 @@ try {
         $c = 0;
         while (!$tag) {
             $tag = strpos($readable_article, '</', 700-$c+$initial_offset);
+            $offset = $tag;
             if ($tag === false) {
-                strpos($readable_article, '/>', 700-$c+$initial_offset);
+                $tag = strpos($readable_article, '/>', 700-$c+$initial_offset);
+                $offset = $tag+2;
             }
             $c++;
         }
 
-        $readable_article = substr($readable_article, $initial_offset, $tag+2);
+        $readable_article = substr($readable_article, $initial_offset, $offset);
 
 
-        $offset = $tag+2;
+        
 
         $show_more_button = true;
     } else if ($initial_offset > 0) {
