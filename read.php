@@ -178,6 +178,9 @@ header('content-type: text/vnd.wap.wml');
             $img_num = 0;
             $imgline_html = "View page images:";
             foreach ($readability->getImages() as $image_url):
+                if ($img_num > 4) {
+                    break;
+                }
                 //we can only do png and jpg
                 if (strpos($image_url, ".jpg") || strpos($image_url, ".jpeg") || strpos($image_url, ".png") === true) {
                     $img_num++;
