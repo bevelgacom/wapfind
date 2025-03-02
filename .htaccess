@@ -1,3 +1,4 @@
 RewriteEngine On
 RewriteRule ^r$ read.php [L]
 RewriteRule ^i$ image.php [L]
+RewriteRule ^c$ image_compressed.php [L]
