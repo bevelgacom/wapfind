@@ -5,7 +5,14 @@ $article_url = "";
 $article_html = "";
 $error_text = "";
 
-// List of Content-Types that we know we can (try to) parse. 
+$show_more_button = false;
+$offset = 0;
+
+if (isset($_GET['o']) && $_GET['o']  > 0) {
+    $offset = $_GET['o'];
+}
+
+// List of content-types that we know we can (try to) parse. 
 // Anything else will get piped through directly, if possible.
 $compatible_content_types = [
     "text/html",
@@ -36,13 +43,26 @@ $host = $url['host'];
 $context = stream_context_create(['http' => array('method' => 'HEAD')]);
 $headers = get_headers($article_url, true, $context);
 
-if (!array_key_exists('Content-Type', $headers) || !array_key_exists('Content-Length', $headers)) {
+if (array_key_exists('Content-Type', $headers)) {
+    $headers['content-type'] = $headers['Content-Type'];
+}
+if (array_key_exists('Content-Length', $headers)) {
+    $headers['content-length'] = $headers['Content-Length'];
+}
+
+if (!array_key_exists('content-type', $headers) || !array_key_exists('content-length', $headers)) {
     $error_text .=  "Failed to get the article, its server did not return expected details :( <br>";
 }
 else {
     // Attempt to handle downloads or other mime-types by passing proxying them through.
-    if (!in_array($headers['Content-Type'], $compatible_content_types)) {
-        $filesize = $headers['Content-Length'];
+    foreach ($compatible_content_types as $content_type) {
+        if (str_contains($headers['content-type'], $content_type)) {
+            $passthrough = false;
+            break;
+        }
+    }
+    if ($passthrough) {
+        $filesize = $headers['content-length'];
 
         // Check if the linked file isn't too large for us to proxy.
         if ($filesize > $proxy_download_max_filesize) {
@@ -51,7 +71,7 @@ else {
             die();
         }
         else {
-            $contentType = $headers['Content-Type'];
+            $contentType = $headers['content-type'];
             // Only use the last-provided content type if an array was returned (ie. when there were redirects involved)
             if (is_array($contentType)) {
                 $contentType = $contentType[count($contentType)-1];
@@ -65,8 +85,8 @@ else {
             }
             
             // Set the content headers based on the file we're proxying through.
-            header('Content-Type: ' . $contentType);
-            header('Content-Length: ' . $filesize);
+            header('content-type: ' . $contentType);
+            header('content-length: ' . $filesize);
             // Set the content-disposition to encourage the browser to download the file.
             header('Content-Disposition: attachment; filename="'. $filename . '"');
 
@@ -95,12 +115,37 @@ if(!$article_html = file_get_contents($article_url)) {
 
 try {
     $readability->parse($article_html);
-    $readable_article = strip_tags($readability->getContent(), '<a><ol><ul><li><br><p><small><font><b><strong><i><em><blockquote><h1><h2><h3><h4><h5><h6>');
+    $readable_article = strip_tags($readability->getContent(), '<a><li><br><p><small><b><strong><i><em>');
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
+    $readable_article = preg_replace( '/<li.*>/', '<br/> *', $readable_article ); //change <li> to '* '
+    $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
+    $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
+    $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
+    $readable_article = str_replace( '<br>', '<br/>', $readable_article ); //change <br> to <br/>
+
+    // remove all cite_note links from wikipedia
+    $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
     
     $readable_article = clean_str($readable_article);
     $readable_article = str_replace( 'href="http', 'href="/read.php?a=http', $readable_article ); //route links through proxy
+
+    $readable_article .= "<br/>";
+    // limit readable_article to 700 characters without breaking html tags
+    if (strlen($readable_article) > 700+$offset) {
+        $start = $offset;
+        // find closest closing tag to 700 characters
+        $tag = strpos($readable_article, '/>', 700+$offset);
+        $readable_article = substr($readable_article, $start, $tag+2);
+
+        $offset = $tag+2;
+
+        $show_more_button = true;
+    } else if ($offset > 0) {
+        echo "END";
+        $readable_article = substr($readable_article, $offset);
+    }
+    
     
 } catch (ParseException $e) {
     $error_text .= 'Sorry! ' . $e->getMessage() . '<br>';
@@ -116,38 +161,42 @@ function clean_str($str) {
 
     return $str;
 }
+
+header('content-type: text/vnd.wap.wml');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 2.0//EN">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- 
- <html>
- <head>
-     <title><?php echo $readability->getTitle();?></title>
- </head>
- <body>
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+<card id="card1" title="<?php echo $readability->getTitle();?>">
+<p><b><?php echo clean_str($readability->getTitle());?></b></p>
+
     <p>
-        <form action="/read.php" method="get">
-        <a href="/">Back to <b><font color="#008000">Frog</font><font color="000000">Find!</font></a></b> | Browsing URL: <input type="text" size="38" name="a" value="<?php echo $article_url ?>">
-        <input type="submit" value="Go!">
-        </form>
-    </p>
-    <hr>
-    <h1><?php echo clean_str($readability->getTitle());?></h1>
-    <p> <?php
-        $img_num = 0;
-        $imgline_html = "View page images:";
-        foreach ($readability->getImages() as $image_url):
-            //we can only do png and jpg
-            if (strpos($image_url, ".jpg") || strpos($image_url, ".jpeg") || strpos($image_url, ".png") === true) {
-                $img_num++;
-                $imgline_html .= " <a href='image.php?i=" . $image_url . "'>[$img_num]</a> ";
+        <small>
+        <?php
+            $img_num = 0;
+            $imgline_html = "View page images:";
+            foreach ($readability->getImages() as $image_url):
+                //we can only do png and jpg
+                if (strpos($image_url, ".jpg") || strpos($image_url, ".jpeg") || strpos($image_url, ".png") === true) {
+                    $img_num++;
+                    $imgline_html .= " <a href='/image.php?i=" . $image_url . "'>[$img_num]</a> ";
+                }
+            endforeach;
+            if($img_num>0) {
+                echo  $imgline_html ;
             }
-        endforeach;
-        if($img_num>0) {
-            echo  $imgline_html ;
-        }
-    ?></small></p>
-    <?php if($error_text) { echo "<p><font color='red'>" . $error_text . "</font></p>"; } ?>
-    <p><font size="4"><?php echo $readable_article;?></font></p>
- </body>
- </html>
+        ?>
+    </small>
+    </p>
+    <?php if($error_text) { echo "<p>" . $error_text . "</p>"; } ?>
+    <p><?php echo $readable_article;?></p>
+
+<?php if($show_more_button) { ?>
+    <p align="center"><a href="/read.php?a=<?php echo urlencode($_GET['a']); ?>&amp;o=<?php echo $offset ?>">&gt; More</a></p>
+<?php } ?>
+<do type="prev" label="Back">
+<prev/>
+</do>
+</card>
+</wml>

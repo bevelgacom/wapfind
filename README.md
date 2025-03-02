@@ -1,4 +1,2 @@
-# FrogFind
-Source for the FrogFind search engine for vintage computers
-
-Love the frog. Be the frog.
+# W@PFind!
+W@PFind! is a fork of [FrogFind](https://github.com/ActionRetro/FrogFind) to become search engine for vintage phones

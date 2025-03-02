@@ -1,5 +1,4 @@
 <?php
-
 $url = "";
 $filetype = "";
 $raw_image = NULL;
@@ -8,45 +7,64 @@ $raw_image = NULL;
 if (isset( $_GET['i'] ) ) {
     $url = $_GET[ 'i' ];
 } else {
+    echo("no image URL :(");
     exit();
 }
 
 //an image will start with http, anything else is sus
 if (substr( $url, 0, 4 ) != "http") {
+    echo("image URL invalid :(");
     exit();
 }
 
-//we can only do jpg and png here
-if (strpos($url, ".jpg") || strpos($url, ".jpeg") === true) {
-    $filetype = "jpg";
-    $raw_image = imagecreatefromjpeg($url);
-} elseif (strpos($url, ".png") === true) {
-    $filetype = "png";
-    $raw_image = imagecreatefrompng($url);
-} else {
+$context = stream_context_create(['http' => array('method' => 'HEAD')]);
+$headers = get_headers($url, true, $context);
+
+if (array_key_exists('Content-Type', $headers)) {
+    $headers['content-type'] = $headers['Content-Type'];
+}
+
+if (!array_key_exists('content-type', $headers)) {
+    echo "Failed to get the image, its server did not return expected details :(";
     exit();
 }
 
-$raw_imagex = imagesx($raw_image);
-$raw_imagey = imagesy($raw_image);
+$allowed_types = ["image/jpeg", "image/png"];
 
-if ($raw_imagex >= $raw_imagey) {
-	$dest_imagex = 300;
-	$dest_imagey = intval(($raw_imagey / $raw_imagex) * $dest_imagex);
-} else {
-	$dest_imagey = 200;
-	$dest_imagex = intval(($raw_imagex / $raw_imagey) * $dest_imagey);
+if (!in_array($headers['content-type'], $allowed_types)) {
+    echo("Unsupported file type :(");
+    exit();
 }
 
-$dest_image = imagecreatetruecolor($dest_imagex, $dest_imagey);
+// get the image
+$raw_image = file_get_contents($url);
 
-imagecopyresampled($dest_image, $raw_image, 0, 0, 0, 0, $dest_imagex, $dest_imagey, $raw_imagex, $raw_imagey);
+$im1 = new Imagick();
+$im1->readImageBlob($raw_image);
 
-header('Content-type: image/' . $filetype); 
-if ($filetype = "jpg") {
-    imagejpeg($dest_image,NULL,80); //80% quality
-} elseif ($filetype = "png") {
-    imagepng($dest_image,NULL,8); //80% compression
-}
+// Resize the image to 100 pixels in width (height auto-adjusts)
+$im1->resizeImage(100, 0, Imagick::FILTER_LANCZOS, 1);
+
+// get image width and height
+$width = $im1->getImageWidth();
+
+// Apply Floyd-Steinberg dithering and remap to a grayscale pattern
+$palette = new Imagick();
+$palette->newPseudoImage(100, $width, "pattern:gray50");
+$im1->remapImage($palette, Imagick::DITHERMETHOD_FLOYDSTEINBERG);
+
+// Output the image as a BMP format and store it in a variable
+$im1->setImageFormat('wbmp');
+$bmpData = $im1->getImageBlob();
+
+// Optionally, display or save the output
+header('Content-Type: image/vnd.wap.wbmp');
+echo $bmpData;
+
+// Cleanup
+$imagick->clear();
+$imagick->destroy();
+$palette->clear();
+$palette->destroy();
 
 ?>

@@ -1,33 +1,39 @@
 <?php
-// idk
+    // set content type
+    header('Content-Type: text/vnd.wap.wml');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 2.0//EN">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
 
-<html>
-<head>
-	<title>FrogFind!</title>
-</head>
-<body>
+<wml>
+<card id="card1" title="About W@PFind!">
+<p align="center">
+<img src="/logo.wbmp" alt="W@PFind!"/>
+</p>
+<p>
+What in the world is W@PFind?
+</p>
 
-    <form action="/" method="get">  
-    <a href="/"><font size=6 color="#008000">Frog</font><font size=6 color="#000000">Find!</font></a> Leap again: <input type="text" size="30" name="q" value="<?php echo urldecode($query) ?>">
-    <input type="submit" value="Ribbbit!">
-    </form>
-    <hr>
-    <br>
-    <center>
-    <h1>What in the world is FrogFind?</h1>
-    <small>A quick FAQ on an unconventional search engine</small>
-    </center>
-    <br>
-    <h3>Who made FrogFind?</h3>
-    Hi, I'm Sean, A.K.A. <a href="https://youtube.com/ActionRetro">Action Retro</a> on YouTube. I work on a lot of 80's and 90's Macs (and other vintage machines), and I really like to try and get them online. However, the modern internet is not kind to old machines, which generally cannot handle the complicated javascript, CSS, and encryption that modern sites have. However, they can browse basic websites just fine. So I decided to see how much of the internet I could turn into basic websites, so that old machines can browse the modern internet once again!
-    <h3>How does FrogFind work?</h3>
-    The search functionality of FrogFind is basically a custom wrapper for DuckDuckGo search, converting the results to extremely basic HTML that old browsers can read. When clicking through to pages from search results, those pages are processed through a <a href="https://github.com/fivefilters/readability.php" target="_blank">PHP port of Mozilla's Readability</a>, which is what powers Firefox's reader mode. I then further strip down the results to be as basic HTML as possible. 
-    <h3>What machines do you test FrogFind on?</h3>
-    I designed FrogFind with classic Macs in mind, so I've been testing on my SE/30 to make sure it looks good in 1 bit color with a 512x384 resolution. Most of my testing has been on Netscape 1.1N and 2.0.2, as well as a few 68k Mac versions of iCab. FrogFind should also work great on any text-based web browser!
-    <h3>How can I get in touch with you?</h3>
-    Send me an email! <a href="mailto:actionretro@pm.me">actionretro@pm.me</a>
-</body>
-</html>
+<p><small>A quick FAQ on a(n) (un)conventional search engine</small></p>
+
+<p>
+    <b>Who made W@PFind!?</b> <br/>
+    Hi I am Maartje, and toghether with a team of retro phone fans under a retro-isp <a href="http://wap.bevelgacom.be">Bevelgacom</a> we made this search engine.<br/>
+    The inspiration of this vane from Sean from <a href="https://youtube.com/ActionRetro">Action Retro</a> on YouTube who built a search engine for vintage computers.
+</p>
+<p>
+    <b>WHow does W@PFind! work?</b><br/>
+    The search functionality of W@PFind! is basically a custom wrapper for DuckDuckGo search, converting the results to extremely basic HTML that old browsers can read. When clicking through to pages from search results, those pages are processed through a <a href="https://github.com/fivefilters/readability.php" target="_blank">PHP port of Mozilla's Readability</a>, which is what powers Firefox's reader mode. I then further strip down the results to be as basic WML as possible. 
+</p>
+<p>
+    <b>What machines do you test W@PFind! on?</b><br/>
+    The engine is specifically designed to fit the constraints of the first Nokia WAP capable phone the Nokia 7110.<br/>
+    However, it should work on any WAP 1.1 compatible device, this will include the 2025 S30+ based HMD Global phones.
+</p>
+
+
+<do type="prev" label="Back">
+<prev/>
+</do>
+</card>
+</wml>

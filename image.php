@@ -22,20 +22,19 @@
         exit();
     }
 
+    header('Content-Type: text/vnd.wap.wml');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 2.0//EN">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- 
- 
- <html>
- <head>
-     <title>FrogFind Image Viewer</title>
- </head>
- <body">
-    <small><a href="<?php echo $_SERVER['HTTP_REFERER'] ?>">< Back to previous page</a></small>
-    <p><small><b>Viewing image:</b> <?php echo $url ?></small></p>
-    <img src="/image_compressed.php?i=<?php echo $url; ?>">
-    <br><br>
-    <small><a href="<?php echo $_SERVER['HTTP_REFERER'] ?>">< Back to previous page</a></small>
- </body>
- </html>
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+<card id="card1" title="W@PFind! Image Viewer">
+<p align="center">
+<img src="/image_compressed.php?i=<?php echo $url; ?>" alt="image"/>
+</p>
+
+<do type="prev" label="Back">
+<prev/>
+</do>
+</card>
+</wml>
