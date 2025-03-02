@@ -28,6 +28,21 @@ curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($c, CURLOPT_MAXREDIRS, 10);
 curl_setopt($c, CURLOPT_TIMEOUT, 10);
+curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0");
+    curl_setopt($c, CURLOPT_HTTPHEADER, array(
+        'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language: en-US,en;q=0.5',
+        'Connection: keep-alive',
+        'Upgrade-Insecure-Requests: 1',
+        'Sec-Fetch-Dest: document',
+        'Sec-Fetch-Mode: navigate',
+        'Sec-Fetch-Site: same-origin',
+        'Sec-Fetch-User: ?1',
+        'Priority: u=0, i',
+        'Pragma: no-cache',
+        'Cache-Control: no-cache',
+        'TE: trailers'
+    ));
 $raw_image = curl_exec($c);
 curl_close($c);
 
