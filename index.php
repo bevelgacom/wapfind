@@ -131,7 +131,7 @@ function clean_str($str) {
 <p align="center"><a href="about.php">Why build such a thing?</a></p>
 
 <do type="accept" label="&gt; Wappit!">
-<go href="/q=$(q)"/>
+<go href="/?q=$(q)"/>
 </do>
 <do type="prev" label="Back">
 <prev/>
