@@ -1,5 +1,6 @@
 <?php
 require_once('vendor/autoload.php');
+require_once('urlcache.php');
 
 $article_url = "";
 $article_html = "";
@@ -27,13 +28,17 @@ $compatible_content_types = [
 $proxy_download_max_filesize = 8000000; // ~ 8Mb
 
 if( isset( $_GET['a'] ) ) {
-    $article_url = "http".$_GET["a"];
+    $article_url = get_url_for_key($_GET['a']);
+    if (!$article_url) {
+        $article_url = "http".$_GET["a"];  
+    }
 } else {
     echo "What do you think you're doing... >:(";
     exit();
 }
 
 if (substr( $article_url, 0, 4 ) != "http") {
+    echo $article_url;
     echo("That's not a web page :(");
     die();
 }
@@ -110,7 +115,7 @@ $configuration
     ->setOriginalURL('http://' . $host);
 
 $readability = new Readability($configuration);
-
+echo $article_url;
 if(!$article_html = file_get_contents($article_url)) {
     $error_text .=  "Failed to get the article :( <br/>";
 }
@@ -119,12 +124,8 @@ function replace_links($html) {
     return preg_replace_callback(
         '/<a\s+href=["\']([^"\']+)["\']/i',
         function ($matches) {
-            $encodedUrl = urlencode($matches[1]);
-            // if encodedUrl starts with http remove the word http
-            if (substr($encodedUrl, 0, 4) == "http") {
-                $encodedUrl = substr($encodedUrl, 4);
-            }
-            return '<a href="/r?a=' . $encodedUrl . '"';
+            $urlKey = save_url($matches[1]);
+            return '<a href="/r?a=' . $urlKey . '"';
         },
         $html
     );
@@ -211,7 +212,7 @@ header('content-type: text/vnd.wap.wml');
                 //we can only do png and jpg
                 if (strpos($image_url, ".jpg") || strpos($image_url, ".jpeg") || strpos($image_url, ".png") === true) {
                     $img_num++;
-                    $imgline_html .= " <a href='/image.php?i=" . urlencode($image_url) . "'>[$img_num]</a> ";
+                    $imgline_html .= " <a href='/i?i=" . save_url($image_url) . "'>[$img_num]</a> ";
                 }
             endforeach;
             if($img_num>0 && $initial_offset == 0) {

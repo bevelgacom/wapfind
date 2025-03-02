@@ -1,2 +1,3 @@
 RewriteEngine On
 RewriteRule ^r$ read.php [L]
+RewriteRule ^i$ image.php [L]
