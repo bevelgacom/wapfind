@@ -22,8 +22,14 @@ if (substr( $url, 0, 4 ) != "http") {
     exit();
 }
 
-// get the image
-$raw_image = file_get_contents($url);
+// get the image with curl
+$c = curl_init($url);
+curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($c, CURLOPT_MAXREDIRS, 10);
+curl_setopt($c, CURLOPT_TIMEOUT, 10);
+$raw_image = curl_exec($c);
+curl_close($c);
 
 $im1 = new Imagick();
 try {
