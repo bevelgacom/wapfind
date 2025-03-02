@@ -51,7 +51,7 @@ if (array_key_exists('Content-Length', $headers)) {
 }
 
 if (!array_key_exists('content-type', $headers) || !array_key_exists('content-length', $headers)) {
-    $error_text .=  "Failed to get the article, its server did not return expected details :( <br>";
+    $error_text .=  "Failed to get the article, its server did not return expected details :( <br/>";
 }
 else {
     // Attempt to handle downloads or other mime-types by passing proxying them through.
@@ -66,7 +66,7 @@ else {
 
         // Check if the linked file isn't too large for us to proxy.
         if ($filesize > $proxy_download_max_filesize) {
-            echo 'Failed to proxy file download, it\'s too large. :( <br>';
+            echo 'Failed to proxy file download, it\'s too large. :( <br/>';
             echo 'You can try downloading the file directly: ' . $article_url;
             die();
         }
@@ -131,7 +131,7 @@ function replace_links($html) {
 
 try {
     $readability->parse($article_html);
-    $readable_article = strip_tags($readability->getContent(), '<a><li><br><p><small><b><strong><i><em>');
+    $readable_article = strip_tags($readability->getContent(), '<a><li><br/><p><small><b><strong><i><em>');
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
     $readable_article = preg_replace( '/<li>/', '<br/> *', $readable_article ); //change <li> to '* '
@@ -139,7 +139,7 @@ try {
     $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
     $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
-    $readable_article = str_replace( '<br>', '<br/>', $readable_article ); //change <br> to <br/>
+    $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
 
     // remove all cite_note links from wikipedia
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
@@ -171,7 +171,7 @@ try {
     
     
 } catch (ParseException $e) {
-    $error_text .= 'Sorry! ' . $e->getMessage() . '<br>';
+    $error_text .= 'Sorry! ' . $e->getMessage() . '<br/>';
 }
 
 //replace chars that old machines probably can't handle
