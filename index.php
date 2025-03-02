@@ -101,8 +101,8 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
             $result_title[0] = substr($result_title[0], 0, $titleLength) . "...";
         }
 
-        $result_title = remove_unsupported_cars($result_title);
-        $result_snippet = remove_unsupported_cars($result_snippet);
+        $result_title = remove_unsupported_chars($result_title);
+        $result_snippet = remove_unsupported_chars($result_snippet);
 
         $final_result_html .= "<br/>\n<a href='" . $result_link . "'>" . $result_title[0] . "<br/>\n" 
                             . $result_display_url . "</a><br/>\n" . $result_snippet . "<br/>\n";
