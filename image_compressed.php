@@ -62,8 +62,8 @@ header('Content-Type: image/vnd.wap.wbmp');
 echo $bmpData;
 
 // Cleanup
-$imagick->clear();
-$imagick->destroy();
+$im1->clear();
+$im1->destroy();
 $palette->clear();
 $palette->destroy();
 
