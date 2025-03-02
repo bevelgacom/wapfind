@@ -102,6 +102,11 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $result_snippet = explode("class='result-snippet'>", $result_blocks[$x])[1];
         $result_snippet = explode('</td>', $result_snippet)[0];
 
+        // if result_display_url contains duckduckgo.com, remove it
+        if (strpos($result_display_url, 'duckduckgo.com') !== false) {
+            continue;
+        }
+
         if (strlen($result_snippet) > $snippetLength) {
             $result_snippet = substr($result_snippet, 0, $snippetLength) . "...";
         }
