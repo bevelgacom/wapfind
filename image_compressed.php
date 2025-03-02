@@ -1,4 +1,6 @@
 <?php
+require_once('urlcache.php');
+
 $url = "";
 $filetype = "";
 $raw_image = NULL;
@@ -10,7 +12,10 @@ if (strpos($_SERVER['HTTP_ACCEPT'], 'image/jpeg') !== false) {
 
 //get the image url
 if (isset( $_GET['i'] ) ) {
-    $url = $_GET[ 'i' ];
+    $url = get_url_for_key($_GET["i"]);
+    if (!$url) {
+        $url = $_GET["i"];  
+    }
 } else {
     echo("no image URL :(");
     exit();

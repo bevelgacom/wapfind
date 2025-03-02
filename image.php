@@ -1,14 +1,9 @@
 <?php
-    require_once('urlcache.php');
-
     $url = "";
     
     //get the image url
     if (isset( $_GET['i'] ) ) {
-        $url = get_url_for_key($_GET['i']);
-        if (!$url) {
-            $url = $_GET["i"];  
-        }
+        $url = $_GET["i"];  
     } else {
         exit();
     }
