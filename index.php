@@ -12,8 +12,8 @@ $show_more_button = false;
 $snippetLength = 150;
 $titleLength = 35;
 
-// if user agent contains Nokia 7110 or Nokia 3110 restrict text more
-if (strpos($_SERVER['HTTP_USER_AGENT'], 'Nokia7110') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Nokia3110') !== false) {
+// if user agent contains Nokia 7110 or Nokia 3330 restrict text more
+if (strpos($_SERVER['HTTP_USER_AGENT'], '7110') !== false || strpos($_SERVER['HTTP_USER_AGENT'], '3330') !== false) {
     $snippetLength = 90;
     $titleLength = 20;
 }
