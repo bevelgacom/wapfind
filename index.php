@@ -70,7 +70,7 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $total_results = 5;
     }
 
-    for ($x = $offset; $x <= $total_results+$offset; $x++) {
+    for ($x = $offset+1; $x <= $total_results+$offset; $x++) {
         // result link, redirected through our proxy
         $result_link = explode('<a rel="nofollow" href="', $result_blocks[$x])[1];
         $result_topline = explode("\" class='result-link'>", $result_link);
