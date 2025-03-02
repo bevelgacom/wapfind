@@ -85,6 +85,14 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         $result_snippet = explode("class='result-snippet'>", $result_blocks[$x])[1];
         $result_snippet = explode('</td>', $result_snippet)[0];
 
+        if (strlen($result_snippet) > 150) {
+            $result_snippet = substr($result_snippet, 0, 150) . "...";
+        }
+
+        if (strlen($result_title[0]) > 35) {
+            $result_title[0] = substr($result_title[0], 0, 35) . "...";
+        }
+
         $final_result_html .= "<br/>\n<a href='" . $result_link . "'>" . $result_title[0] . "<br/>\n" 
                             . $result_display_url . "</a><br/>\n" . $result_snippet . "<br/>\n";
         
