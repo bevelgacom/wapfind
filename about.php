@@ -23,7 +23,7 @@ What in the world is W@PFind?
 </p>
 <p>
     <b>WHow does W@PFind! work?</b><br/>
-    The search functionality of W@PFind! is basically a custom wrapper for DuckDuckGo search, converting the results to extremely basic HTML that old browsers can read. When clicking through to pages from search results, those pages are processed through a <a href="https://github.com/fivefilters/readability.php" target="_blank">PHP port of Mozilla's Readability</a>, which is what powers Firefox's reader mode. I then further strip down the results to be as basic WML as possible. 
+    The search functionality of W@PFind! is basically a custom wrapper for DuckDuckGo search, converting the results to extremely basic HTML that old browsers can read. When clicking through to pages from search results, those pages are processed through a <a href="https://github.com/fivefilters/readability.php">PHP port of Mozilla's Readability</a>, which is what powers Firefox's reader mode. I then further strip down the results to be as basic WML as possible. 
 </p>
 <p>
     <b>What machines do you test W@PFind! on?</b><br/>
