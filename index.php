@@ -119,9 +119,11 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
         }
 
         $result_title = remove_unsupported_chars($result_title);
+        $result_title = htmlentities($result_title);
+        
         $result_snippet = remove_unsupported_chars($result_snippet);
-
         $result_snippet = strip_tags($result_snippet);
+        $result_snippet = htmlentities($result_snippet);
 
         $final_result_html .= "<br/>\n<a href='" . $result_link . "'>" . $result_title[0] . "<br/>\n" 
                             . $result_display_url . "</a><br/>\n" . $result_snippet . "<br/>\n";
