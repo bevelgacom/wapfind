@@ -118,8 +118,8 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
             $result_title[0] = substr($result_title[0], 0, $titleLength) . "...";
         }
 
-        $result_title = remove_unsupported_chars($result_title);
-        $result_title = htmlentities($result_title);
+        $result_title[0] = remove_unsupported_chars($result_title[0]);
+        $result_title[0] = htmlentities($result_title[0]);
         
         $result_snippet = remove_unsupported_chars($result_snippet);
         $result_snippet = strip_tags($result_snippet);
