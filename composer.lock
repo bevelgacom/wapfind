@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19eb6da47fbfc12352622df9e1cece53",
+    "content-hash": "3df90828835ae88b95d5c8a8661a0e61",
     "packages": [
+        {
+            "name": "chrisspaghetti/useragentgenerator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chrisspaghetti/UserAgentGenerator.git",
+                "reference": "9ab33c77f00eb39d531a16a4f3316d572af6f64e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chrisspaghetti/UserAgentGenerator/zipball/9ab33c77f00eb39d531a16a4f3316d572af6f64e",
+                "reference": "9ab33c77f00eb39d531a16a4f3316d572af6f64e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "userAgent.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "phpfail",
+                    "email": "phpfail@gihub.com"
+                },
+                {
+                    "name": "chrisspaghetti",
+                    "email": "chrisspaghetti@chrispage.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Generate a random User Agent based on OS, platform, browser, etc.",
+            "keywords": [
+                "generator",
+                "random",
+                "user agent"
+            ],
+            "support": {
+                "source": "https://github.com/chrisspaghetti/UserAgentGenerator/tree/master"
+            },
+            "time": "2020-11-01T13:50:41+00:00"
+        },
         {
             "name": "fivefilters/readability.php",
             "version": "v3.1.6",
@@ -415,10 +465,12 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "chrisspaghetti/useragentgenerator": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

@@ -40,10 +40,11 @@ if(isset( $_GET['q'])) { // if there's a search query, show the results for it
     curl_setopt($c, CURLOPT_URL, $search_url);
     curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 
-    // curl 'https://lite.duckduckgo.com/lite/' --compressed -X POST -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br, zstd' -H 'Referer: https://lite.duckduckgo.com/' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Origin: https://lite.duckduckgo.com' -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-Fetch-Dest: document' -H 'Sec-Fetch-Mode: navigate' -H 'Sec-Fetch-Site: same-origin' -H 'Sec-Fetch-User: ?1' -H 'Priority: u=0, i' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' -H 'TE: trailers' --data-raw 'q=bevel&kl=&df='
+    $userAgent = (new userAgent) ->generate();
+
     curl_setopt($c, CURLOPT_POST, 1);
     curl_setopt($c, CURLOPT_POSTFIELDS, "q=$query&kl=&df=");
-    curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0");
+    curl_setopt($c, CURLOPT_USERAGENT, $userAgent);
     curl_setopt($c, CURLOPT_HTTPHEADER, array(
         'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language: en-US,en;q=0.5',
