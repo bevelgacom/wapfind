@@ -57,6 +57,29 @@ $host = $url['host'];
 $context = stream_context_create(['http' => array('method' => 'HEAD')]);
 $headers = get_headers($article_url, true, $context);
 
+$redirs_followed = 0;
+while (array_key_exists('Location', $headers)) {
+    // If the server returned a redirect, follow it
+    $article_url = $headers['Location'];
+
+    // handle relative URLs
+    if (strpos($article_url, 'http') !== 0) {
+        // If the URL is relative, prepend the host
+        $article_url = 'http://' . $host . '/' . ltrim($article_url, '/');
+    }
+
+    $context = stream_context_create(['http' => array('method' => 'HEAD')]);
+    $headers = get_headers($article_url, true, $context);
+    $url = parse_url($article_url);
+    $host = $url['host'];
+    $redirs_followed++;
+    if ($redirs_followed > 10) {
+        // If we followed too many redirects, give up
+        $error_text .= "Too many redirects, giving up. :( <br/>";
+        break;
+    }
+}
+
 if (array_key_exists('Content-Type', $headers)) {
     $headers['content-type'] = $headers['Content-Type'];
 }
