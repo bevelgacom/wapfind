@@ -60,7 +60,12 @@ $headers = get_headers($article_url, true, $context);
 $redirs_followed = 0;
 while (array_key_exists('Location', $headers)) {
     // If the server returned a redirect, follow it
-    $article_url = $headers['Location'];
+    // Handle case where Location header could be an array
+    if (is_array($headers['Location'])) {
+        $article_url = end($headers['Location']); // Get the last redirect URL
+    } else {
+        $article_url = $headers['Location'];
+    }
 
     // handle relative URLs
     if (strpos($article_url, 'http') !== 0) {
