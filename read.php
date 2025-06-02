@@ -197,7 +197,9 @@ try {
     $readable_article = preg_replace('/title="[^"]+"/', '', $readable_article);
     $readable_article = preg_replace('/rel="[^"]+"/', '', $readable_article);
 
-    
+    // strip all data- tags 
+    $readable_article = preg_replace('/data-[^=]+="[^"]+"/', '', $readable_article);
+
     $readable_article = clean_str($readable_article);
     //$readable_article = str_replace( 'href="http', 'href="/r?a=', $readable_article ); //route links through proxy
 
