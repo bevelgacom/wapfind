@@ -228,13 +228,13 @@ try {
     $readable_article = "";
     
     foreach ($tokens as $token) {
-        if (strlen($readable_article.$token) > 700) {
+        if (strlen($readable_article.$token) > $size_limit) {
             // if the token does not contain any html tags, we can add word by word
             if (strpos($token, '<') === false) {
                 $words = explode(' ', $token);
                 
                 foreach ($words as $word) {
-                    if (strlen($readable_article.$word) > 700) {
+                    if (strlen($readable_article.$word) > $size_limit) {
                         break;
                     }
                     $readable_article .= " ". $word;
