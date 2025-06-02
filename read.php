@@ -10,6 +10,8 @@ $show_more_button = false;
 $offset = 0;
 $initial_offset = 0;
 
+$size_limit = 700; // Maximum size of the article to display at once
+
 function tokenizeArticle($article) {
     // Use a regex pattern to match entire HTML tags along with their contents or plain text separately
     preg_match_all('/<[^>]+>[^<]*<\/[^>]+>|<[^>]+>|[^<>]+/', $article, $matches);
@@ -96,6 +98,15 @@ if (array_key_exists('Content-Type', $headers)) {
 }
 if (array_key_exists('Content-Length', $headers)) {
     $headers['content-length'] = $headers['Content-Length'];
+}
+
+if (array_key_exists('User-Agent', $headers)) {
+    $headers['user-agent'] = $headers['User-Agent'];
+}
+
+// if the user-agent contains `Nokia7110` lower the size limit
+if (array_key_exists('user-agent', $headers) && strpos($headers['user-agent'], 'Nokia7110') !== false) {
+    $size_limit = 550; // Maximum size of the article to display at once for Nokia7110
 }
 
 if (!array_key_exists('content-type', $headers) || !array_key_exists('content-length', $headers)) {
