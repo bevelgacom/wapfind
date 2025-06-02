@@ -181,22 +181,14 @@ function replace_links($html) {
 try {
     $readability->parse($article_html);
 
-    // strip all data- tags 
-    $readable_article = preg_replace('/data-[^=]+="[^"]+"/', '', $readable_article);
+   
 
-    // strip all whitespace in tags eg `<p   >` to `<p>`
-    $readable_article = preg_replace('/<(\w+)\s+[^>]*>/', '<$1>', $readable_article);
-    $readable_article = preg_replace('/<(\w+)\s+[^>]*\/>/', '<$1/>', $readable_article);
-    
     $readable_article = strip_tags($readability->getContent(), '<a><li><br/><p><small><b><strong><i><em>');
     $readable_article = str_replace( 'strong>', 'b>', $readable_article ); //change <strong> to <b>
     $readable_article = str_replace( 'em>', 'i>', $readable_article ); //change <em> to <i>
     $readable_article = preg_replace( '/<li>/', '<br/> *', $readable_article ); //change <li> to '* '
     $readable_article = preg_replace( '/<li[^>]*>/', '<br/> *', $readable_article ); //change <li> to '* '
     $readable_article = str_replace( '</li>', '', $readable_article ); //change </li> to ''
-    $readable_article = str_replace( '<p>', '<br/>', $readable_article ); //change </p> to ''
-    $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
-    $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
 
     // remove all cite_note links from wikipedia
     $readable_article = preg_replace('/<a href="#cite_note-[^>]+>[^<]+<\/a>/', '', $readable_article);
@@ -205,7 +197,12 @@ try {
     $readable_article = preg_replace('/title="[^"]+"/', '', $readable_article);
     $readable_article = preg_replace('/rel="[^"]+"/', '', $readable_article);
 
-    
+    // strip all data- tags 
+    $readable_article = preg_replace('/data-[^=]+="[^"]+"/', '', $readable_article);
+
+    $readable_article = str_replace( '<p[^>]*>', '<br/>', $readable_article ); //change </p> to ''
+    $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
+    $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
 
     $readable_article = clean_str($readable_article);
     //$readable_article = str_replace( 'href="http', 'href="/r?a=', $readable_article ); //route links through proxy
