@@ -100,13 +100,9 @@ if (array_key_exists('Content-Length', $headers)) {
     $headers['content-length'] = $headers['Content-Length'];
 }
 
-if (array_key_exists('User-Agent', $headers)) {
-    $headers['user-agent'] = $headers['User-Agent'];
-}
-
 // if the user-agent contains `Nokia7110` lower the size limit
-if (array_key_exists('user-agent', $headers) && strpos($headers['user-agent'], 'Nokia7110') !== false) {
-    $size_limit = 550; // Maximum size of the article to display at once for Nokia7110
+if (array_key_exists('HTTP_USER_AGENT', $_SERVER) && strpos($_SERVER['HTTP_USER_AGENT'], 'Nokia7110') !== false) {
+    $size_limit = 500; // Maximum size of the article to display at once for Nokia7110
 }
 
 if (!array_key_exists('content-type', $headers) || !array_key_exists('content-length', $headers)) {
