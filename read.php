@@ -200,7 +200,7 @@ try {
     // strip all data- tags 
     $readable_article = preg_replace('/data-[^=]+="[^"]+"/', '', $readable_article);
 
-    $readable_article = str_replace( '<p[^>]*>', '<br/>', $readable_article ); //change </p> to ''
+    $readable_article = preg_replace( '/<p[^>]*>/', '<br/>', $readable_article ); //change <p> to '<br/>'
     $readable_article = str_replace( '</p>', '', $readable_article ); //change </p> to ''
     $readable_article = str_replace( '<br/>', '<br/>', $readable_article ); //change <br/> to <br/>
 
